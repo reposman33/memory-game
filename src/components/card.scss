@@ -1,0 +1,22 @@
+.card {
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	cursor: grabbing;
+	height: 99px; // fixed card heihgt
+	margin: 1rem;
+	position: relative;
+	width: 100%;
+
+	p {
+		color: white;
+		font-size: 3rem;
+		height: 100%;
+		width: 100%;
+		text-align: center;
+	}
+}
+
+.turnedOverCard {
+	background-color: black;
+	width: 24%;
+}

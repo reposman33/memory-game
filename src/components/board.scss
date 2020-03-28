@@ -1,0 +1,34 @@
+.container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+
+	& button {
+		background-color: blue;
+		cursor: pointer;
+		margin: 1rem;
+		color: white;
+		font-size: 2rem;
+		border-radius: 5px;
+		padding: 0.5rem 1rem;
+	}
+	& .header {
+		font-size: 3rem;
+	}
+
+	& .board {
+		background-color: darkcyan;
+		border: 10px solid #aaa;
+		border-radius: 5px;
+		flex-direction: column;
+		height: auto;
+		margin: 1rem;
+		padding: 1rem;
+		width: auto;
+	}
+
+	& .subHeader {
+		font-size: 2rem;
+		min-height: 3rem;
+	}
+}

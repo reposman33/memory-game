@@ -1,22 +1,40 @@
-.card {
-	border: 1px solid #ccc;
-	border-radius: 5px;
-	cursor: grabbing;
-	height: 99px; // fixed card heihgt
-	margin: 1rem;
-	position: relative;
-	width: 100%;
+.scene {
+	width: 200px;
+	height: 200px;
+	perspective: 600px;
+	padding: 0.5rem;
 
-	p {
-		color: white;
-		font-size: 3rem;
-		height: 100%;
+	& .card {
 		width: 100%;
-		text-align: center;
-	}
-}
+		height: 100%;
+		position: relative;
+		cursor: pointer;
+		transition: transform 1s;
+		transform-style: preserve-3d;
 
-.turnedOverCard {
-	background-color: black;
-	width: 24%;
+		& .card__face {
+			position: absolute;
+			height: 100%;
+			width: 100%;
+			backface-visibility: hidden;
+		}
+		& .card__face--front {
+			//	background: red;
+			& img {
+				width: 100%;
+			}
+		}
+
+		& .card__face--back {
+			//	background: blue;
+			transform: rotateY(180deg);
+			& img {
+				width: 100%;
+			}
+		}
+	}
+
+	.card.is-flipped {
+		transform: rotateY(180deg);
+	}
 }

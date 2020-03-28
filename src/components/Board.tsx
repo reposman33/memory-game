@@ -6,10 +6,10 @@ import "./board.scss";
 const Board = () => {
 	const [fileList, setFileList] = useState<{}>();
 	const nrOfColumns = 8;
-	const assetsPath = "/assets/img/cards";
+	const assetsPath = "/assets/img";
 
 	useEffect(() => {
-		fetch(`${assetsPath}/files.json`)
+		fetch(`${assetsPath}/cards/files.json`)
 			.then(res => res.json())
 			.then(res => {
 				setFileList(res);
@@ -25,7 +25,7 @@ const Board = () => {
 			col: i % nrOfColumns,
 			id: i,
 			hiddenImgPath: `${assetsPath}/hiddenImg.jpg`,
-			imgPath: `${assetsPath}/${fileName}`,
+			imgPath: `${assetsPath}/cards/${fileName}`,
 			onClickCard: onClickCard,
 			row: Math.floor(i / nrOfColumns),
 			visible: true

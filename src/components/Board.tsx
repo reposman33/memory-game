@@ -104,7 +104,17 @@ const Board = () => {
 	 * @function onStart - executed when start button clicked. Hides and shuffles cards
 	 */
 	const onStart = () => {
+		// hide cards
 		cardReferences.forEach(ref => ref.flipCard(true));
+		// shuffle cards
+		const _randomizedFileNamesArray: string[] = [];
+		while (fileNamesArray.length > 0) {
+			let randomIndex = Math.floor(Math.random() * fileNamesArray.length);
+			_randomizedFileNamesArray.push(fileNamesArray[randomIndex]);
+			fileNamesArray.splice(randomIndex, 1);
+		}
+		// change cards image
+		cardReferences.forEach((ref, i) => ref.setImagePath(`${assetsPath}/cards/${_randomizedFileNamesArray[i]}`));
 	};
 
 	return (

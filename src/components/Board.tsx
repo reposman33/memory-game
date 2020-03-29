@@ -25,16 +25,19 @@ const Board = () => {
 			.catch(e => console.log("ERROR: ", e));
 	}, []);
 
-	const onClickCard = (card: card) => {
+	const onClickCard = (clickedCard: card) => {
+		if (turnedCards.some(card => card.id === clickedCard.id)) {
+			return;
+		}
 		if (turnedCards.length === 2) {
 			turnedCards.forEach(card => card.flip(false));
 			turnedCards = [];
-			turnedCards.push(card);
+			turnedCards.push(clickedCard);
 		} else if (turnedCards.length === 1) {
-			turnedCards.push(card);
+			turnedCards.push(clickedCard);
 			// compare card equality
 		} else {
-			turnedCards.push(card);
+			turnedCards.push(clickedCard);
 		}
 	};
 
@@ -47,7 +50,7 @@ const Board = () => {
 			imgPath: `${assetsPath}/cards/${fileName}`,
 			onClickCard: onClickCard,
 			row: Math.floor(i / nrOfColumns),
-			visible: true
+			visible: false
 		}));
 	};
 

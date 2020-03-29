@@ -2,26 +2,31 @@ import React, { useState } from "react";
 import { TCard } from "../types/Card";
 import "./card.scss";
 
-const Card = ({ tile, onHandleClick }: { tile: TCard; onHandleClick: Function }) => {
+const Card = ({ card, onHandleClick }: { card: TCard; onHandleClick: Function }) => {
 	const [flippedState, setFlippedState] = useState(false);
 
+	function flipCard(newState: boolean) {
+		setFlippedState(newState);
+	}
+
 	const onClick = () => {
-		setFlippedState(!flippedState);
+		flipCard(true);
 		onHandleClick({
-			row: tile.row,
-			col: tile.col,
-			id: tile.id
+			row: card.row,
+			col: card.col,
+			id: card.id,
+			flip: flipCard
 		});
 	};
 
 	return (
-		<div className='scene' data-id={tile.id} data-row={tile.row} data-col={tile.col} onClick={onClick}>
+		<div className='scene' data-id={card.id} data-row={card.row} data-col={card.col} onClick={onClick}>
 			<div className={"card " + (flippedState ? "is-flipped" : "")}>
 				<div className='card__face card__face--front'>
-					<img src={tile.imgPath} alt='' />
+					{card.visible ? <img src={card.imgPath} alt='' /> : <img src={card.hiddenImgPath} alt='' />}
 				</div>
 				<div className='card__face card__face--back'>
-					<img src={tile.hiddenImgPath} alt='' />
+					{!card.visible ? <img src={card.imgPath} alt='' /> : <img src={card.hiddenImgPath} alt='' />}
 				</div>
 			</div>
 		</div>

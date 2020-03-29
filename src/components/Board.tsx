@@ -13,7 +13,7 @@ const Board = () => {
 	const [fileList, setFileList] = useState<{}>();
 	const nrOfColumns = 8;
 	const assetsPath = "/assets/img";
-	const turnedCards: card[] = [];
+	let turnedCards: card[] = [];
 
 	useEffect(() => {
 		fetch(`${assetsPath}/cards/files.json`)
@@ -27,6 +27,8 @@ const Board = () => {
 	const onClickCard = (card: card) => {
 		if (turnedCards.length === 2) {
 			turnedCards.forEach(card => card.flip(false));
+			turnedCards = [];
+			turnedCards.push(card);
 		} else if (turnedCards.length === 1) {
 			turnedCards.push(card);
 			// compare card equality

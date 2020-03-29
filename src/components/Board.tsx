@@ -14,6 +14,7 @@ const Board = () => {
 	const nrOfColumns = 8;
 	const assetsPath = "/assets/img";
 	let turnedCards: card[] = [];
+	const cards: Function[] = [];
 
 	useEffect(() => {
 		fetch(`${assetsPath}/cards/files.json`)
@@ -46,7 +47,7 @@ const Board = () => {
 			imgPath: `${assetsPath}/cards/${fileName}`,
 			onClickCard: onClickCard,
 			row: Math.floor(i / nrOfColumns),
-			visible: false
+			visible: true
 		}));
 	};
 
@@ -55,10 +56,26 @@ const Board = () => {
 		for (let i = 0; i < memoryCards.length; i++) {
 			if (i % nrOfColumns === 0) {
 				const memoryCard = memoryCards.slice(i, i + nrOfColumns);
-				rows.push(<Row key={i} cards={memoryCard} onClick={onClickCard} />);
+				rows.push(
+					<Row key={i} cards={memoryCard} onClick={onClickCard} updateCardReference={updateCardReference} />
+				);
 			}
 		}
 		return rows;
+	};
+
+	// add ref to flipCard function from cards
+	const updateCardReference = (f: Function) => {
+		cards.push(f);
+	};
+
+	const onStart = () => {
+		const intervalId = setInterval(() => {
+			cards.forEach((flipCard, i) => {
+				flipCard(true);
+				i === cards.length - 1 && clearInterval(intervalId);
+			});
+		}, 250);
 	};
 
 	return (
@@ -66,6 +83,9 @@ const Board = () => {
 			<div className='board'>
 				{fileList && makeRows(getMemoryCards(fileList, `${assetsPath}`), nrOfColumns, onClickCard)}
 			</div>
+			<button className='button' onClick={onStart}>
+				Start
+			</button>
 		</div>
 	);
 };

@@ -1,9 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { TCard } from "../types/Card";
 import "./card.scss";
 
-const Card = ({ card, onHandleClick }: { card: TCard; onHandleClick: Function }) => {
+const Card = ({
+	card,
+	onHandleClick,
+	updateCardReference
+}: {
+	card: TCard;
+	onHandleClick: Function;
+	updateCardReference: Function;
+}) => {
 	const [flippedState, setFlippedState] = useState(false);
+
+	useEffect(() => {
+		// give Board comp a reference to the flipCard function
+		updateCardReference(flipCard);
+	}, [updateCardReference]);
 
 	function flipCard(newState: boolean) {
 		setFlippedState(newState);

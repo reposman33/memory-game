@@ -22,7 +22,7 @@ const Card = ({
 	/**
 	 * @function flipCard
 	 * @description function to turn a card upside down
-	 * @param {boolean} newState - true: card turned backside up, false card turned backside down
+	 * @param {boolean} newState - true: card turned backside up, false card turned frontside up
 	 * @return {void}
 	 */
 	function flipCard(newState: boolean) {
@@ -34,7 +34,7 @@ const Card = ({
 	 * @description function executed when clicked on a card.. Calls flipCard() to flip card and onHandleClick() to invoke Board component related functionality
 	 */
 	const onClick = () => {
-		flipCard(true);
+		flipCard(false);
 		onHandleClick({
 			row: card.row,
 			col: card.col,

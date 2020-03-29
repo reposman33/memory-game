@@ -3,10 +3,17 @@ import { Row } from "./Row";
 import { TCard } from "../types/Card";
 import "./board.scss";
 
+type card = {
+	row: number;
+	col: number;
+	id: number;
+	flip: Function;
+};
 const Board = () => {
 	const [fileList, setFileList] = useState<{}>();
 	const nrOfColumns = 8;
 	const assetsPath = "/assets/img";
+	const turnedCards: card[] = [];
 
 	useEffect(() => {
 		fetch(`${assetsPath}/cards/files.json`)
@@ -17,7 +24,16 @@ const Board = () => {
 			.catch(e => console.log("ERROR: ", e));
 	}, []);
 
-	const onClickCard = (card: {}): void => {};
+	const onClickCard = (card: card) => {
+		if (turnedCards.length === 2) {
+			turnedCards.forEach(card => card.flip(false));
+		} else if (turnedCards.length === 1) {
+			turnedCards.push(card);
+			// compare card equality
+		} else {
+			turnedCards.push(card);
+		}
+	};
 
 	const getMemoryCards = (fileData: {}, imgPath: string) => {
 		const fileNames: string[] = Object.keys(fileData).concat(Object.keys(fileData));
@@ -28,7 +44,7 @@ const Board = () => {
 			imgPath: `${assetsPath}/cards/${fileName}`,
 			onClickCard: onClickCard,
 			row: Math.floor(i / nrOfColumns),
-			visible: true
+			visible: false
 		}));
 	};
 

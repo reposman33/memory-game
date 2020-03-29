@@ -73,12 +73,7 @@ const Board = () => {
 	};
 
 	const onStart = () => {
-		const intervalId = setInterval(() => {
-			cards.forEach((flipCard, i) => {
-				flipCard(true);
-				i === cards.length - 1 && clearInterval(intervalId);
-			});
-		}, 250);
+		cards.forEach(flipCard => flipCard(true));
 	};
 
 	return (

@@ -6,7 +6,7 @@ class I18n {
 		},
 		BUTTON_START: { en: "Start the puzzle", nl: "Start de test" },
 		BUTTON_START_TITLE: {
-			en: "Click 'Start' tpo start the puzzle",
+			en: "Click 'Start' to start the puzzle",
 			nl: "Klik op 'Start' om de puzzel te beginnen"
 		},
 		SCOREBOARD_HEADER: { en: "Score", nl: "Stand" },
@@ -16,7 +16,7 @@ class I18n {
 		},
 		SCOREBOARD_WIN: {
 			en: "Great work! You discovered all pairs in time!",
-			nl: "Bravo! Alle dubbele kaarten gevonden binnen de tijd!"
+			nl: "Bravo! Alle je vond alle dubbele kaarten op tijd!"
 		}
 	};
 	static get(key: string) {

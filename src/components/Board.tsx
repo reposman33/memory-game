@@ -21,18 +21,22 @@ type scoreBoardReference = {
 	incrementScore: Function;
 	incrementMoveCount: Function;
 	setScoreBoardVisibility: Function;
+	showGameWonText: Function;
 };
 
 const Board = () => {
 	const [fileNamesArray, setFileNamesArray] = useState<string[]>([]);
+
 	const nrOfColumns = 8;
 	const assetsPath = "/assets/img";
 	const cardReferences: cardReference[] = [];
 	const scoreBoardReferences: scoreBoardReference = {
 		incrementScore: Function,
 		incrementMoveCount: Function,
-		setScoreBoardVisibility: Function
+		setScoreBoardVisibility: Function,
+		showGameWonText: Function
 	};
+	let foundDuplicates: number = 0;
 	let turnedCards: TClickedcard[] = [];
 	// the board is unresponsive until 'Start' button is clicked
 	let gameActive: boolean = false;
@@ -50,12 +54,12 @@ const Board = () => {
 	/**
 	 * @function getMemoryCards
 	 * @description create an array of filenames
-	 * @param {object} fileData - array containing filenames of cards: ["a04.jpg","b01.jpg",... ] from  filenames.json
+	 * @param {array} imgNames - array containing filenames of cards: ["a04.jpg","b01.jpg",... ] from  filenames.json
 	 * @param {string} imgPath - path to img folder
 	 * @returns {array} - an array of TCard objects
 	 */
-	const getMemoryCards = (fileData: {}, imgPath: string): TCard[] => {
-		return fileNamesArray.map((fileName: string, i: number) => ({
+	const getMemoryCards = (imgNames: string[], imgPath: string): TCard[] => {
+		return imgNames.map((fileName: string, i: number) => ({
 			col: i % nrOfColumns,
 			id: i,
 			hiddenImgPath: `${assetsPath}/hiddenImg.jpg`,
@@ -106,9 +110,14 @@ const Board = () => {
 			turnedCards.push(clickedCard);
 			// compare card equality
 			turnedCards[0].imgPath === turnedCards[1].imgPath && scoreBoardReferences.incrementScore();
+			// keep tract of nrOfMoves
 			scoreBoardReferences.incrementMoveCount();
+			foundDuplicates++;
 		} else {
 			turnedCards.push(clickedCard);
+		}
+		if (foundDuplicates < fileNamesArray.length / 2) {
+			scoreBoardReferences.showGameWonText(I18n.get("SCOREBOARD_WIN"));
 		}
 	};
 
@@ -131,6 +140,7 @@ const Board = () => {
 		scoreBoardReferences.incrementScore = refs.incrementScore;
 		scoreBoardReferences.incrementMoveCount = refs.incrementMoveCount;
 		scoreBoardReferences.setScoreBoardVisibility = refs.setScoreBoardVisibility;
+		scoreBoardReferences.showGameWonText = refs.showGameWonText;
 	};
 
 	/**
@@ -143,10 +153,11 @@ const Board = () => {
 		cardReferences.forEach(ref => ref.flipCard(true));
 		// shuffle cards
 		const _randomizedFileNamesArray: string[] = [];
-		while (fileNamesArray.length > 0) {
-			let randomIndex = Math.floor(Math.random() * fileNamesArray.length);
-			_randomizedFileNamesArray.push(fileNamesArray[randomIndex]);
-			fileNamesArray.splice(randomIndex, 1);
+		const _fileNamesArray = [...fileNamesArray];
+		while (_fileNamesArray.length > 0) {
+			let randomIndex = Math.floor(Math.random() * _fileNamesArray.length);
+			_randomizedFileNamesArray.push(_fileNamesArray[randomIndex]);
+			_fileNamesArray.splice(randomIndex, 1);
 		}
 		// change cards image
 		cardReferences.forEach((ref, i) => ref.setImagePath(`${assetsPath}/cards/${_randomizedFileNamesArray[i]}`));

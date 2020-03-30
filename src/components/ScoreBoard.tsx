@@ -6,13 +6,15 @@ const ScoreBoard = (props: { score: number; updateScoreBoardReference: Function 
 	const [score, setScore] = useState(props.score);
 	const [moveCount, setMoveCount] = useState(0);
 	const [scoreBoardVisibility, setScoreBoardVisibility] = useState(false);
+	const [gameOverText, setGameOverText] = useState();
 
 	useEffect(
 		() =>
 			props.updateScoreBoardReference({
 				incrementScore: () => setScore(score + 1),
 				incrementMoveCount: () => setMoveCount(moveCount + 1),
-				setScoreBoardVisibility: (mode: boolean) => setScoreBoardVisibility(mode)
+				setScoreBoardVisibility: (mode: boolean) => setScoreBoardVisibility(mode),
+				showGameWonText: (text: string) => setGameOverText(text)
 			}),
 		[moveCount, props, score]
 	);
@@ -24,7 +26,12 @@ const ScoreBoard = (props: { score: number; updateScoreBoardReference: Function 
 			  )} ${moveCount}`
 			: "";
 
-	return <div className={styles.header}>{scoreBoardContent()}</div>;
+	return (
+		<React.Fragment>
+			<div className={styles.header}>{scoreBoardContent()}</div>
+			<div className={`${styles.gameOver} ${gameOverText ? styles.rotate : ""}`}>{gameOverText}</div>
+		</React.Fragment>
+	);
 };
 
 export { ScoreBoard };

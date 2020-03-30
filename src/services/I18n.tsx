@@ -18,7 +18,7 @@ class I18n {
 		},
 		SCOREBOARD_WIN: {
 			en: "Great work! You discovered all pairs in time!",
-			nl: "Bravo! Alle je vond alle dubbele kaarten op tijd!"
+			nl: "Bravo! Je hebt alle dubbele kaarten gevonden!"
 		},
 		SCOREBOARD_CURRENTSCORE_LABEL: { en: "Your current score:", nl: "Je score is:" },
 		SCOREBOARD_CURRENTMOVE_LABEL: { en: "Used moves:", nl: "Aantal pogingen:" }

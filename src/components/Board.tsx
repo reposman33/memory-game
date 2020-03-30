@@ -103,7 +103,9 @@ const Board = () => {
 			return;
 		}
 		if (turnedCards.length === 2) {
-			turnedCards.forEach(card => card.flip(true));
+			if (turnedCards[0].imgPath !== turnedCards[1].imgPath) {
+				turnedCards.forEach(card => card.flip(true));
+			}
 			turnedCards = [];
 			turnedCards.push(clickedCard);
 		} else if (turnedCards.length === 1) {

@@ -36,10 +36,9 @@ const Card = ({
 	const onClick = () => {
 		flipCard(false);
 		onHandleClick({
-			row: card.row,
-			col: card.col,
+			flip: flipCard,
 			id: card.id,
-			flip: flipCard
+			imgPath: imagePath
 		});
 	};
 

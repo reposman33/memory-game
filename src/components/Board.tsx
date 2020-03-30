@@ -20,6 +20,7 @@ type cardReference = {
 type scoreBoardReference = {
 	incrementScore: Function;
 	incrementMoveCount: Function;
+	setScoreBoardVisibility: Function;
 };
 
 const Board = () => {
@@ -27,7 +28,11 @@ const Board = () => {
 	const nrOfColumns = 8;
 	const assetsPath = "/assets/img";
 	const cardReferences: cardReference[] = [];
-	const scoreBoardReferences: scoreBoardReference = { incrementScore: Function, incrementMoveCount: Function };
+	const scoreBoardReferences: scoreBoardReference = {
+		incrementScore: Function,
+		incrementMoveCount: Function,
+		setScoreBoardVisibility: Function
+	};
 	let turnedCards: TClickedcard[] = [];
 	// the board is unresponsive until 'Start' button is clicked
 	let gameActive: boolean = false;
@@ -125,6 +130,7 @@ const Board = () => {
 	const updateScoreBoardReference = (refs: scoreBoardReference) => {
 		scoreBoardReferences.incrementScore = refs.incrementScore;
 		scoreBoardReferences.incrementMoveCount = refs.incrementMoveCount;
+		scoreBoardReferences.setScoreBoardVisibility = refs.setScoreBoardVisibility;
 	};
 
 	/**
@@ -144,6 +150,7 @@ const Board = () => {
 		}
 		// change cards image
 		cardReferences.forEach((ref, i) => ref.setImagePath(`${assetsPath}/cards/${_randomizedFileNamesArray[i]}`));
+		scoreBoardReferences.setScoreBoardVisibility(true);
 	};
 
 	return (

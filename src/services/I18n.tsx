@@ -19,7 +19,9 @@ class I18n {
 		SCOREBOARD_WIN: {
 			en: "Great work! You discovered all pairs in time!",
 			nl: "Bravo! Alle je vond alle dubbele kaarten op tijd!"
-		}
+		},
+		SCOREBOARD_CURRENTSCORE_LABEL: { en: "Your current score:", nl: "Je score is:" },
+		SCOREBOARD_CURRENTMOVE_LABEL: { en: "Used moves:", nl: "Aantal pogingen:" }
 	};
 	static get(key: string) {
 		return I18n["tokens"][key] ? this.tokens[key][navigator.language] : "";

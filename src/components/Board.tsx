@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Row } from "./Row";
 import { TCard } from "../types/Card";
+import { I18n } from "../services/I18n";
+
 import "./board.scss";
 
 type TClickedcard = {
@@ -86,6 +88,7 @@ const Board = () => {
 		} else if (turnedCards.length === 1) {
 			turnedCards.push(clickedCard);
 			// compare card equality
+			// keep score
 		} else {
 			turnedCards.push(clickedCard);
 		}
@@ -119,11 +122,12 @@ const Board = () => {
 
 	return (
 		<div className='container'>
+			<div className='header'>{I18n.get("HEADER")}</div>
 			<div className='board'>
 				{fileNamesArray && makeRows(getMemoryCards(fileNamesArray, `${assetsPath}`), nrOfColumns, onClickCard)}
 			</div>
 			<button className='button' onClick={onStart}>
-				Start
+				{I18n.get("BUTTON_START")}
 			</button>
 		</div>
 	);

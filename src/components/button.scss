@@ -1,0 +1,13 @@
+button {
+	background-color: #1e57d1;
+	cursor: pointer;
+	margin: 1rem;
+	color: white;
+	font-size: 2rem;
+	border-radius: 5px;
+	padding: 0.5rem 1rem;
+
+	&[disabled] {
+		background-color: #1e576e69;
+	}
+}

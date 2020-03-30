@@ -116,7 +116,7 @@ const Board = () => {
 		} else {
 			turnedCards.push(clickedCard);
 		}
-		if (foundDuplicates < fileNamesArray.length / 2) {
+		if (foundDuplicates === fileNamesArray.length / 2) {
 			scoreBoardReferences.showGameWonText(I18n.get("SCOREBOARD_WIN"));
 		}
 	};

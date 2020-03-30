@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Row } from "./Row";
 import { TCard } from "../types/Card";
 import { I18n } from "../services/I18n";
+import { Button } from "./Button";
 
 import "./board.scss";
 
@@ -22,8 +23,9 @@ const Board = () => {
 	const nrOfColumns = 8;
 	const assetsPath = "/assets/img";
 	const cardReferences: cardReference[] = [];
-	let gameMode: "GAMEOVER" | "PLAYING" | "DEMO" = "GAMEOVER";
 	let turnedCards: TClickedcard[] = [];
+	// the board is unresponsive until 'Start' button is clicked
+	let gameActive: boolean = false;
 
 	useEffect(() => {
 		fetch(`${assetsPath}/cards/files.json`)
@@ -73,24 +75,13 @@ const Board = () => {
 		return rows;
 	};
 
-	const isGameOver = () => gameMode === "GAMEOVER";
-	const isPlaying = () => gameMode === "PLAYING";
-	const isDemo = () => gameMode === "DEMO";
-
-	const setGameModeGameOver = () => (gameMode = "GAMEOVER");
-	const setGameModePlaying = () => (gameMode = "PLAYING");
-	const setGameModeDemo = () => (gameMode = "DEMO");
-
 	/**
 	 * @function onClickCard - Callback invoked by Card component. It invokes functionality such as flipping back cards when the 3d card is clicked, checking card equality etc
 	 * @param {TClickedcard} the clickedCard containing the flip function to turn the card upside down.
 	 * @returns {void}
 	 */
 	const onClickCard = (clickedCard: TClickedcard) => {
-		if (isGameOver()) {
-			return;
-		}
-		if (turnedCards.some(card => card.id === clickedCard.id)) {
+		if (turnedCards.some(card => card.id === clickedCard.id) || !gameActive) {
 			return;
 		}
 		if (turnedCards.length === 2) {
@@ -120,7 +111,7 @@ const Board = () => {
 	 * @function onStart - executed when start button clicked. Hides and shuffles cards
 	 */
 	const onStart = () => {
-		setGameModePlaying();
+		gameActive = true;
 		// hide cards
 		cardReferences.forEach(ref => ref.flipCard(true));
 		// shuffle cards
@@ -140,9 +131,7 @@ const Board = () => {
 			<div className='board'>
 				{fileNamesArray && makeRows(getMemoryCards(fileNamesArray, `${assetsPath}`), nrOfColumns, onClickCard)}
 			</div>
-			<button className='button' onClick={onStart}>
-				{I18n.get("BUTTON_START")}
-			</button>
+			<Button onStart={onStart} />
 		</div>
 	);
 };

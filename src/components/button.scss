@@ -4,10 +4,11 @@ button {
 	margin: 1rem;
 	color: white;
 	font-size: 2rem;
-	border-radius: 5px;
+	border-radius: 15px;
 	padding: 0.5rem 1rem;
 
 	&[disabled] {
 		background-color: #1e576e69;
+		cursor: default;
 	}
 }

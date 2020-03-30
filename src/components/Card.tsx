@@ -45,7 +45,7 @@ const Card = ({
 
 	return (
 		<div className='scene' data-id={card.id} data-row={card.row} data-col={card.col} onClick={onClick}>
-			<div className={"card " + (flippedState ? "is-flipped" : "")}>
+			<div className={"card" + (flippedState ? " is-flipped" : "")}>
 				<div className='card__face card__face--front'>
 					{card.visible ? <img src={imagePath} alt='' /> : <img src={card.hiddenImgPath} alt='' />}
 				</div>

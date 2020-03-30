@@ -21,8 +21,9 @@ const Board = () => {
 	const [fileNamesArray, setFileNamesArray] = useState<string[]>([]);
 	const nrOfColumns = 8;
 	const assetsPath = "/assets/img";
-	let turnedCards: TClickedcard[] = [];
 	const cardReferences: cardReference[] = [];
+	let gameMode: "GAMEOVER" | "PLAYING" | "DEMO" = "GAMEOVER";
+	let turnedCards: TClickedcard[] = [];
 
 	useEffect(() => {
 		fetch(`${assetsPath}/cards/files.json`)
@@ -72,12 +73,23 @@ const Board = () => {
 		return rows;
 	};
 
+	const isGameOver = () => gameMode === "GAMEOVER";
+	const isPlaying = () => gameMode === "PLAYING";
+	const isDemo = () => gameMode === "DEMO";
+
+	const setGameModeGameOver = () => (gameMode = "GAMEOVER");
+	const setGameModePlaying = () => (gameMode = "PLAYING");
+	const setGameModeDemo = () => (gameMode = "DEMO");
+
 	/**
 	 * @function onClickCard - Callback invoked by Card component. It invokes functionality such as flipping back cards when the 3d card is clicked, checking card equality etc
 	 * @param {TClickedcard} the clickedCard containing the flip function to turn the card upside down.
 	 * @returns {void}
 	 */
 	const onClickCard = (clickedCard: TClickedcard) => {
+		if (isGameOver()) {
+			return;
+		}
 		if (turnedCards.some(card => card.id === clickedCard.id)) {
 			return;
 		}
@@ -88,6 +100,7 @@ const Board = () => {
 		} else if (turnedCards.length === 1) {
 			turnedCards.push(clickedCard);
 			// compare card equality
+
 			// keep score
 		} else {
 			turnedCards.push(clickedCard);
@@ -107,6 +120,7 @@ const Board = () => {
 	 * @function onStart - executed when start button clicked. Hides and shuffles cards
 	 */
 	const onStart = () => {
+		setGameModePlaying();
 		// hide cards
 		cardReferences.forEach(ref => ref.flipCard(true));
 		// shuffle cards

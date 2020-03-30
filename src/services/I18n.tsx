@@ -4,7 +4,9 @@ class I18n {
 			en: "Test your short term memory! Find the pairs in the puzzle",
 			nl: "Hoe goed is jouw geheugen? Vind de gelijke kaarten"
 		},
-		BUTTON_START: { en: "Start the puzzle", nl: "Start de test" },
+		BUTTON_START_ACTIVE: { en: "Start the puzzle", nl: "Start de puzzel" },
+		BUTTON_START_INACTIVE: { en: "puzzling...", nl: "puzzelen..." },
+
 		BUTTON_START_TITLE: {
 			en: "Click 'Start' to start the puzzle",
 			nl: "Klik op 'Start' om de puzzel te beginnen"

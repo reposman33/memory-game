@@ -17,7 +17,7 @@ const Card = ({
 	useEffect(() => {
 		// give Board component a reference to the flipCard and setImagePath functions
 		updateCardReference({ flipCard: flipCard, setImagePath: setImagePath });
-	}, [imagePath, updateCardReference]);
+	}, [updateCardReference]);
 
 	/**
 	 * @function flipCard

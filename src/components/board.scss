@@ -5,11 +5,12 @@
 
 	& .header {
 		font-size: 3rem;
+		margin-top: 3rem;
 	}
 
 	& .board {
 		background-color: #fff;
-		border: 3px solid #000;
+		box-shadow: 0 0 30px 5px #ccc;
 		border-radius: 35px;
 		flex-direction: column;
 		height: auto;

@@ -4,6 +4,8 @@
 	height: 3rem;
 }
 .gameOver {
+	animation: rotate 0.8s ease-out 1s infinite alternate, drop 1s ease-in;
+
 	background-color: darkslategray;
 	border-radius: 1rem;
 	color: white;
@@ -13,10 +15,26 @@
 	opacity: 0.8;
 	padding: 1rem;
 	top: 25%;
-	transition: all 1s ease;
 	z-index: 10;
 }
 
-.rotate {
-	transform: rotate(350deg);
+@keyframes rotate {
+	from {
+		transform: rotate(0);
+	}
+
+	to {
+		transform: rotate(-40deg);
+	}
+}
+@keyframes drop {
+	from {
+		margin: 0;
+		top: 0;
+	}
+
+	to {
+		margin: 0.5rem;
+		top: 25%;
+	}
 }

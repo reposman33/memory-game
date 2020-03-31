@@ -14,7 +14,7 @@ const ScoreBoard = (props: { score: number; updateScoreBoardReference: Function 
 				incrementScore: () => setScore(score + 1),
 				incrementMoveCount: () => setMoveCount(moveCount + 1),
 				setScoreBoardVisibility: (mode: boolean) => setScoreBoardVisibility(mode),
-				showGameWonText: (text: string) => setGameOverText(text)
+				showGameOverText: (text: string) => setGameOverText(text)
 			}),
 		[moveCount, props, score]
 	);

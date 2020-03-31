@@ -21,7 +21,7 @@ type scoreBoardReference = {
 	incrementScore: Function;
 	incrementMoveCount: Function;
 	setScoreBoardVisibility: Function;
-	showGameWonText: Function;
+	showGameOverText: Function;
 };
 
 const Board = () => {
@@ -34,7 +34,7 @@ const Board = () => {
 		incrementScore: Function,
 		incrementMoveCount: Function,
 		setScoreBoardVisibility: Function,
-		showGameWonText: Function
+		showGameOverText: Function
 	};
 	let foundDuplicates: number = 0;
 	let turnedCards: TClickedcard[] = [];
@@ -119,7 +119,7 @@ const Board = () => {
 			turnedCards.push(clickedCard);
 		}
 		if (foundDuplicates === fileNamesArray.length / 2) {
-			scoreBoardReferences.showGameWonText(I18n.get("SCOREBOARD_WIN"));
+			scoreBoardReferences.showGameOverText(I18n.get("SCOREBOARD_WIN"));
 		}
 	};
 
@@ -142,7 +142,7 @@ const Board = () => {
 		scoreBoardReferences.incrementScore = refs.incrementScore;
 		scoreBoardReferences.incrementMoveCount = refs.incrementMoveCount;
 		scoreBoardReferences.setScoreBoardVisibility = refs.setScoreBoardVisibility;
-		scoreBoardReferences.showGameWonText = refs.showGameWonText;
+		scoreBoardReferences.showGameOverText = refs.showGameOverText;
 	};
 
 	/**

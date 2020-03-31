@@ -5,6 +5,7 @@ class I18n {
 			nl: "Hoe goed is jouw geheugen? Vind de gelijke kaarten"
 		},
 		BUTTON_START_ACTIVE: { en: "Start the puzzle", nl: "Start de puzzel" },
+		BUTTON_START_DEMO: { en: "Show demo", nl: "Klik voor een demo" },
 		BUTTON_START_INACTIVE: { en: "puzzling...", nl: "puzzelen..." },
 
 		BUTTON_START_TITLE: {

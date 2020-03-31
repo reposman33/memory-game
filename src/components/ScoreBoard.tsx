@@ -28,10 +28,10 @@ const ScoreBoard = (props: { score: number; updateScoreBoardReference: Function 
 
 	return (
 		<React.Fragment>
-			<div className={styles.header}>{scoreBoardContent()}</div>
 			{gameOverText && (
 				<div className={`${styles.gameOver} ${gameOverText ? styles.rotate : ""}`}>{gameOverText}</div>
 			)}
+			<div className={styles.header}>{scoreBoardContent()}</div>
 		</React.Fragment>
 	);
 };

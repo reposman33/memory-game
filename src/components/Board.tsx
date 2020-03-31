@@ -24,11 +24,16 @@ type scoreBoardReference = {
 	showGameOverText: Function;
 };
 
+type buttonReference = {
+	setButtonStatus: Function;
+};
+
 const Board = () => {
 	const [fileNamesArray, setFileNamesArray] = useState<string[]>([]);
 
 	const nrOfColumns = 8;
 	const assetsPath = "/assets/img";
+	const buttonReferences: buttonReference = { setButtonStatus: Function };
 	const cardReferences: cardReference[] = [];
 	const scoreBoardReferences: scoreBoardReference = {
 		incrementScore: Function,
@@ -82,13 +87,39 @@ const Board = () => {
 		const rows = [];
 		for (let i = 0; i < memoryCards.length; i++) {
 			if (i % nrOfColumns === 0) {
-				const memoryCard = memoryCards.slice(i, i + nrOfColumns);
+				const _cards = memoryCards.slice(i, i + nrOfColumns);
 				rows.push(
-					<Row key={i} cards={memoryCard} onClick={onClickCard} updateCardReference={updateCardReference} />
+					<Row key={i} cards={_cards} onClick={onClickCard} updateCardReference={updateCardReference} />
 				);
 			}
 		}
 		return rows;
+	};
+
+	/**
+	 * @function updateCardReference
+	 * @description callback: after rendering Card returns references to Card functions
+	 * @param {object} refs - an object where each value refers to a function
+	 * @returns {void}
+	 */
+	const updateCardReference = (refs: cardReference) => {
+		cardReferences.push(refs);
+	};
+
+	/**
+	 * @function updateScoreBoardReference
+	 * @description callback: after rendering the scoreBoard returns handlers to update score and move
+	 * @param refs
+	 */
+	const updateScoreBoardReference = (refs: scoreBoardReference) => {
+		scoreBoardReferences.incrementScore = refs.incrementScore;
+		scoreBoardReferences.incrementMoveCount = refs.incrementMoveCount;
+		scoreBoardReferences.setScoreBoardVisibility = refs.setScoreBoardVisibility;
+		scoreBoardReferences.showGameOverText = refs.showGameOverText;
+	};
+
+	const updateButtonReference = (refs: buttonReference) => {
+		buttonReferences.setButtonStatus = refs.setButtonStatus;
 	};
 
 	/**
@@ -118,31 +149,11 @@ const Board = () => {
 		} else {
 			turnedCards.push(clickedCard);
 		}
-		if (foundDuplicates === fileNamesArray.length / 2) {
+		if (foundDuplicates >= fileNamesArray.length / 2) {
 			scoreBoardReferences.showGameOverText(I18n.get("SCOREBOARD_WIN"));
+			buttonReferences.setButtonStatus("ACTIVE");
+			turnedCards = [];
 		}
-	};
-
-	/**
-	 * @function updateCardReference
-	 * @description callback: after rendering Card returns references to Card functions
-	 * @param {object} refs - an object where each value refers to a function
-	 * @returns {void}
-	 */
-	const updateCardReference = (refs: cardReference) => {
-		cardReferences.push(refs);
-	};
-
-	/**
-	 * @function updateScoreBoardReference
-	 * @description callback: after rendering the scoreBoard returns handlers to update score and move
-	 * @param refs
-	 */
-	const updateScoreBoardReference = (refs: scoreBoardReference) => {
-		scoreBoardReferences.incrementScore = refs.incrementScore;
-		scoreBoardReferences.incrementMoveCount = refs.incrementMoveCount;
-		scoreBoardReferences.setScoreBoardVisibility = refs.setScoreBoardVisibility;
-		scoreBoardReferences.showGameOverText = refs.showGameOverText;
 	};
 
 	/**
@@ -151,6 +162,7 @@ const Board = () => {
 	 */
 	const onStart = () => {
 		gameActive = true;
+		scoreBoardReferences.showGameOverText("");
 		// hide cards
 		cardReferences.forEach(ref => ref.flipCard(true));
 		// shuffle cards
@@ -173,7 +185,7 @@ const Board = () => {
 			<div className='board'>
 				{fileNamesArray && makeRows(getMemoryCards(fileNamesArray, `${assetsPath}`), nrOfColumns, onClickCard)}
 			</div>
-			<Button onStart={onStart} />
+			<Button updateButtonReference={updateButtonReference} onStart={onStart} />
 		</div>
 	);
 };

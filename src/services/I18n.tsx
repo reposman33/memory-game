@@ -1,4 +1,5 @@
 class I18n {
+	static defaultLanguage: string = "en";
 	static tokens: { [key: string]: any } = {
 		HEADER: {
 			en: "Test your short term memory! Find the pairs in the puzzle",
@@ -25,7 +26,9 @@ class I18n {
 		SCOREBOARD_CURRENTMOVE_LABEL: { en: "Used moves:", nl: "Aantal pogingen:" }
 	};
 	static get(key: string) {
-		return I18n["tokens"][key] ? this.tokens[key][navigator.language] : "";
+		return I18n["tokens"][key][navigator.language.substr(0, 2)]
+			? this.tokens[key][navigator.language.substr(0, 2)]
+			: this.tokens[key][I18n.defaultLanguage];
 	}
 }
 

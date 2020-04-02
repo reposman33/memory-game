@@ -17,34 +17,33 @@ type cardReference = {
 	setImagePath: Function;
 };
 
-type scoreBoardReference = {
-	incrementScore: Function;
-	incrementMoveCount: Function;
-	setScoreBoardVisibility: Function;
-	showGameOverText: Function;
-};
+// type scoreBoardReference = {
+// 	incrementScore: Function;
+// 	incrementMoveCount: Function;
+// 	setScoreBoardVisibility: Function;
+// 	showGameOverText: Function;
+// };
 
 type buttonReference = {
 	setButtonStatus: Function;
 };
 
+const nrOfColumns = 8;
+const assetsPath = "/assets/img";
+const buttonReferences: buttonReference = { setButtonStatus: Function };
+const cardReferences: cardReference[] = [];
+let turnedCards: TClickedcard[] = [];
+
+// the board is unresponsive until 'Start' button is clicked
+let gameActive: boolean = false;
+
 const Board = () => {
 	const [fileNamesArray, setFileNamesArray] = useState<string[]>([]);
-
-	const nrOfColumns = 8;
-	const assetsPath = "/assets/img";
-	const buttonReferences: buttonReference = { setButtonStatus: Function };
-	const cardReferences: cardReference[] = [];
-	const scoreBoardReferences: scoreBoardReference = {
-		incrementScore: Function,
-		incrementMoveCount: Function,
-		setScoreBoardVisibility: Function,
-		showGameOverText: Function
-	};
-	let foundDuplicates: number = 0;
-	let turnedCards: TClickedcard[] = [];
-	// the board is unresponsive until 'Start' button is clicked
-	let gameActive: boolean = false;
+	// Scoreboard dependencies
+	const [score, setScore] = useState(0);
+	const [moveCount, setMoveCount] = useState(0);
+	const [scoreBoardVisibility, setScoreBoardVisibility] = useState(false);
+	const [gameOverText, setGameOverText] = useState("");
 
 	useEffect(() => {
 		fetch(`${assetsPath}/cards/files.json`)
@@ -106,18 +105,6 @@ const Board = () => {
 		cardReferences.push(refs);
 	};
 
-	/**
-	 * @function updateScoreBoardReference
-	 * @description callback: after rendering the scoreBoard returns handlers to update score and move
-	 * @param refs
-	 */
-	const updateScoreBoardReference = (refs: scoreBoardReference) => {
-		scoreBoardReferences.incrementScore = refs.incrementScore;
-		scoreBoardReferences.incrementMoveCount = refs.incrementMoveCount;
-		scoreBoardReferences.setScoreBoardVisibility = refs.setScoreBoardVisibility;
-		scoreBoardReferences.showGameOverText = refs.showGameOverText;
-	};
-
 	const updateButtonReference = (refs: buttonReference) => {
 		buttonReferences.setButtonStatus = refs.setButtonStatus;
 	};
@@ -142,15 +129,14 @@ const Board = () => {
 		} else if (turnedCards.length === 1) {
 			turnedCards.push(clickedCard);
 			// compare card equality
-			turnedCards[0].imgPath === turnedCards[1].imgPath && scoreBoardReferences.incrementScore();
+			turnedCards[0].imgPath === turnedCards[1].imgPath && setScore(score + 1);
 			// keep tract of nrOfMoves
-			scoreBoardReferences.incrementMoveCount();
-			foundDuplicates++;
+			setMoveCount(moveCount + 1);
 		} else {
 			turnedCards.push(clickedCard);
 		}
-		if (foundDuplicates >= fileNamesArray.length / 2) {
-			scoreBoardReferences.showGameOverText(I18n.get("SCOREBOARD_WIN"));
+		if (score >= fileNamesArray.length / 2) {
+			setGameOverText(I18n.get("SCOREBOARD_WIN"));
 			buttonReferences.setButtonStatus("ACTIVE");
 			turnedCards = [];
 		}
@@ -162,7 +148,7 @@ const Board = () => {
 	 */
 	const onStart = () => {
 		gameActive = true;
-		scoreBoardReferences.showGameOverText("");
+		setGameOverText("");
 		// hide cards
 		cardReferences.forEach(ref => ref.flipCard(true));
 		// shuffle cards
@@ -175,13 +161,18 @@ const Board = () => {
 		}
 		// change cards image
 		cardReferences.forEach((ref, i) => ref.setImagePath(`${assetsPath}/cards/${_randomizedFileNamesArray[i]}`));
-		scoreBoardReferences.setScoreBoardVisibility(true);
+		setScoreBoardVisibility(true);
 	};
 
 	return (
 		<div className='container'>
 			<div className='header'>{I18n.get("HEADER")}</div>
-			<ScoreBoard score={0} updateScoreBoardReference={updateScoreBoardReference} />
+			<ScoreBoard
+				score={score}
+				moveCount={moveCount}
+				scoreBoardVisibility={scoreBoardVisibility}
+				gameOverText={gameOverText}
+			/>
 			<div className='board'>
 				{fileNamesArray && makeRows(getMemoryCards(fileNamesArray, `${assetsPath}`), nrOfColumns, onClickCard)}
 			</div>

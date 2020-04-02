@@ -17,13 +17,10 @@ type cardReference = {
 	setImagePath: Function;
 };
 
-type buttonReference = {
-	setButtonStatus: Function;
-};
+type TButtonStatus = "ACTIVE" | "INACTIVE" | "DEMO";
 
 const nrOfColumns = 8;
 const assetsPath = "/assets/img";
-const buttonReferences: buttonReference = { setButtonStatus: Function };
 const cardReferences: cardReference[] = [];
 let turnedCards: TClickedcard[] = [];
 
@@ -37,6 +34,8 @@ const Board = () => {
 	const [moveCount, setMoveCount] = useState(0);
 	const [scoreBoardVisibility, setScoreBoardVisibility] = useState(false);
 	const [gameOverText, setGameOverText] = useState("");
+	// Button dependencies
+	const [buttonStatus, setButtonStatus] = useState<TButtonStatus>("ACTIVE");
 
 	useEffect(() => {
 		fetch(`${assetsPath}/cards/files.json`)
@@ -98,10 +97,6 @@ const Board = () => {
 		cardReferences.push(refs);
 	};
 
-	const updateButtonReference = (refs: buttonReference) => {
-		buttonReferences.setButtonStatus = refs.setButtonStatus;
-	};
-
 	/**
 	 * @function onClickCard
 	 * @description Callback invoked by Card component. It invokes functionality such as flipping back cards when the 3d card is clicked, checking card equality etc
@@ -130,7 +125,7 @@ const Board = () => {
 		}
 		if (score >= fileNamesArray.length / 2) {
 			setGameOverText(I18n.get("SCOREBOARD_WIN"));
-			buttonReferences.setButtonStatus("ACTIVE");
+			setButtonStatus("ACTIVE");
 			turnedCards = [];
 		}
 	};
@@ -155,6 +150,7 @@ const Board = () => {
 		// change cards image
 		cardReferences.forEach((ref, i) => ref.setImagePath(`${assetsPath}/cards/${_randomizedFileNamesArray[i]}`));
 		setScoreBoardVisibility(true);
+		setButtonStatus("INACTIVE");
 	};
 
 	return (
@@ -169,7 +165,7 @@ const Board = () => {
 			<div className='board'>
 				{fileNamesArray && makeRows(getMemoryCards(fileNamesArray, `${assetsPath}`), nrOfColumns, onClickCard)}
 			</div>
-			<Button updateButtonReference={updateButtonReference} onStart={onStart} />
+			<Button status={buttonStatus} onStart={onStart} />
 		</div>
 	);
 };

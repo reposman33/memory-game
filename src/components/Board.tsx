@@ -18,7 +18,6 @@ type cardReference = {
 };
 
 type TButtonStatus = "ACTIVE" | "INACTIVE" | "DEMO";
-
 const nrOfColumns = 8;
 const assetsPath = "/assets/img";
 const cardReferences: cardReference[] = [];

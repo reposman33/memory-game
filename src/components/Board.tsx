@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, MouseEvent } from "react";
 import { Row } from "./Row";
 import { TCard } from "../types/Card";
 import { I18n } from "../services/I18n";
@@ -35,15 +35,16 @@ const Board = () => {
 	const [gameOverText, setGameOverText] = useState("");
 	// Button dependencies
 	const [buttonStatus, setButtonStatus] = useState<TButtonStatus>("ACTIVE");
+	const [language, setLanguage] = useState(I18n.language);
 
 	useEffect(() => {
 		fetch(`${assetsPath}/cards/files.json`)
-			.then(res => res.json())
-			.then(res => {
+			.then((res) => res.json())
+			.then((res) => {
 				const _arr = Object.keys(res).concat(Object.keys(res));
 				setFileNamesArray(_arr);
 			})
-			.catch(e => console.log("ERROR: ", e));
+			.catch((e) => console.log("ERROR: ", e));
 	}, []);
 
 	/**
@@ -61,7 +62,7 @@ const Board = () => {
 			imgPath: `${assetsPath}/cards/${fileName}`,
 			onClickCard: onClickCard,
 			row: Math.floor(i / nrOfColumns),
-			visible: true
+			visible: true,
 		}));
 	};
 
@@ -104,12 +105,12 @@ const Board = () => {
 	 */
 	const onClickCard = (clickedCard: TClickedcard) => {
 		// ignore multiple clicks on same card || clicks when the game has not been started yet
-		if (turnedCards.some(card => card.id === clickedCard.id) || !gameActive) {
+		if (turnedCards.some((card) => card.id === clickedCard.id) || !gameActive) {
 			return;
 		}
 		if (turnedCards.length === 2) {
 			if (turnedCards[0].imgPath !== turnedCards[1].imgPath) {
-				turnedCards.forEach(card => card.flip(true));
+				turnedCards.forEach((card) => card.flip(true));
 			}
 			turnedCards = [];
 			turnedCards.push(clickedCard);
@@ -137,7 +138,7 @@ const Board = () => {
 		gameActive = true;
 		setGameOverText("");
 		// hide cards
-		cardReferences.forEach(ref => ref.flipCard(true));
+		cardReferences.forEach((ref) => ref.flipCard(true));
 		// shuffle cards
 		const _randomizedFileNamesArray: string[] = [];
 		const _fileNamesArray = [...fileNamesArray];
@@ -152,8 +153,23 @@ const Board = () => {
 		setButtonStatus("INACTIVE");
 	};
 
+	const selectLanguage = (ev: any) => {
+		I18n.selectLanguage(ev.currentTarget.getAttribute("data-lang"));
+		// we need to re-render, therefore we invented prop language. A bit of a hack...
+		setLanguage(ev.currentTarget.getAttribute("data-lang"));
+	};
+
 	return (
 		<div className='container'>
+			<span className='languageButtons'>
+				<span onClick={selectLanguage} data-lang='nl' className={language === "nl" ? "selected" : ""}>
+					nl
+				</span>
+				&nbsp; /&nbsp;
+				<span onClick={selectLanguage} data-lang='en' className={language === "en" ? "selected" : ""}>
+					en
+				</span>
+			</span>
 			<div className='header'>{I18n.get("HEADER")}</div>
 			<ScoreBoard
 				score={score}

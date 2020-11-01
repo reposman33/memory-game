@@ -18,7 +18,8 @@ type cardReference = {
 };
 
 type TButtonStatus = "ACTIVE" | "INACTIVE" | "DEMO";
-const nrOfColumns = 8;
+// Size of board. nrOfColumns === nrOfRows, we have 4*4 and 6*6 matrix since total Nr OfCards has to be even to have pairs of equal cards
+const nrOfColumns = 6; // === (4*4) / 2 unique cards; (6*6) / 2 = 18 unique cards; (8*8) / 2 = 32 unique cards
 const assetsPath = "/assets/img";
 const cardReferences: cardReference[] = [];
 let turnedCards: TClickedcard[] = [];
@@ -29,6 +30,7 @@ let gameActive: boolean = false;
 const Board = () => {
 	const [fileNamesArray, setFileNamesArray] = useState<string[]>([]);
 	// Scoreboard dependencies
+	const [boardSize, setBoardSize] = useState(nrOfColumns);
 	const [score, setScore] = useState(0);
 	const [moveCount, setMoveCount] = useState(0);
 	const [scoreBoardVisibility, setScoreBoardVisibility] = useState(false);
@@ -37,17 +39,25 @@ const Board = () => {
 	const [buttonStatus, setButtonStatus] = useState<TButtonStatus>("ACTIVE");
 	const [language, setLanguage] = useState(I18n.language);
 
+/**
+ * @description 1a retrieve the names of all the _unique_ cardImages;
+ * 				1b determine the number of unique images;
+ * 				1c duplicate that so we have all the card images needed for the board;
+ */
 	useEffect(() => {
-		fetch(`${assetsPath}/cards/files.json`)
+		setFileNamesArray([]); // start with an empty board
+		fetch(`${assetsPath}/cards/files.json`) //1
 			.then((res) => res.json())
 			.then((res) => {
-				const _arr = Object.keys(res).concat(Object.keys(res));
-				setFileNamesArray(_arr);
+				const nrOfUniqueCards = Math.pow(boardSize, 2) / 2; // 2
+				const cardfileNames = Object.keys(res).slice(0, nrOfUniqueCards); // 2
+				setFileNamesArray(cardfileNames.concat(cardfileNames)); // 3
 			})
 			.catch((e) => console.log("ERROR: ", e));
-	}, []);
+	}, [boardSize]);
 
 	/**
+	 * @description - 2 convert the array of cardImage names to an objectarray 
 	 * @function getMemoryCards
 	 * @description create an array of filenames
 	 * @param {array} imgNames - array containing filenames of cards: ["a04.jpg","b01.jpg",... ] from  filenames.json
@@ -56,33 +66,31 @@ const Board = () => {
 	 */
 	const getMemoryCards = (imgNames: string[], imgPath: string): TCard[] => {
 		return imgNames.map((fileName: string, i: number) => ({
-			col: i % nrOfColumns,
+			col: i % boardSize,
 			id: i,
 			hiddenImgPath: `${assetsPath}/hiddenImg.jpg`,
 			imgPath: `${assetsPath}/cards/${fileName}`,
 			onClickCard: onClickCard,
-			row: Math.floor(i / nrOfColumns),
+			row: Math.floor(i / boardSize),
 			visible: true,
 		}));
 	};
 
 	/**
 	 * @function makeRows
-	 * @description make <nrOfColumns> Row components containing <nrOfColumns> cards
+	 * @description 3 Initialize boardSize Row components containing each boardSize cards
 	 * @param {array} memoryCards - array of memorycards
-	 * @param {number} nrOfColumns - the number of columns. Since the board is rectangular this is also equal to the number of rows.
+	 * @param {number} boardSize - the number of columns. Since the board is rectangular this is also equal to the number of rows.
 	 * @param {Function} onClickCard - callback that a card executes when clicked.
 	 * @returns an array with Row components
 	 */
-	const makeRows = (memoryCards: TCard[], nrOfColumns: number, onClickCard: Function) => {
+	const makeRows = (memoryCards: TCard[], boardSize: number, onClickCard: Function) => {
 		const rows = [];
-		for (let i = 0; i < memoryCards.length; i++) {
-			if (i % nrOfColumns === 0) {
-				const _cards = memoryCards.slice(i, i + nrOfColumns);
+		for (let row = 0; row < boardSize; row++) {
+				const _cards = memoryCards.slice(row * boardSize, row * boardSize + boardSize);
 				rows.push(
-					<Row key={i} cards={_cards} onClick={onClickCard} updateCardReference={updateCardReference} />
+					<Row key={row} cards={_cards} onClick={onClickCard} updateCardReference={updateCardReference} />
 				);
-			}
 		}
 		return rows;
 	};
@@ -177,8 +185,17 @@ const Board = () => {
 				scoreBoardVisibility={scoreBoardVisibility}
 				gameOverText={gameOverText}
 			/>
+			<div className="subHeader">Choose a board size</div>
+				<div>
+				<input id="boardSize8" type="radio" name="boardsize" value="8" checked={boardSize===8} onClick={()=>setBoardSize(8)} />
+					<label htmlFor="boardSize8">8*8</label>
+					<input id="boardSize6" type="radio" name="boardsize" value="6" checked={boardSize===6} onClick={()=>setBoardSize(6)} />
+					<label htmlFor="boardSize6">6*6</label>
+				<input id="boardSize4" type="radio" name="boardsize" value="4" checked={boardSize===4} onClick={()=>setBoardSize(4)} />
+					<label htmlFor="boardSize4">4*4</label>
+				</div>
 			<div className='board'>
-				{fileNamesArray && makeRows(getMemoryCards(fileNamesArray, `${assetsPath}`), nrOfColumns, onClickCard)}
+				{fileNamesArray && makeRows(getMemoryCards(fileNamesArray, `${assetsPath}`), boardSize, onClickCard)}
 			</div>
 			<Button status={buttonStatus} onStart={onStart} />
 		</div>

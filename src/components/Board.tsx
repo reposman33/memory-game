@@ -187,11 +187,11 @@ const Board = () => {
 			/>
 			<div className="subHeader">Choose a board size</div>
 				<div>
-				<input id="boardSize8" type="radio" name="boardsize" value="8" checked={boardSize===8} onClick={()=>setBoardSize(8)} />
+					<input id="boardSize8" type="radio" name="boardsize" value="8" checked={boardSize===8} onClick={()=>setBoardSize(8)} />
 					<label htmlFor="boardSize8">8*8</label>
 					<input id="boardSize6" type="radio" name="boardsize" value="6" checked={boardSize===6} onClick={()=>setBoardSize(6)} />
 					<label htmlFor="boardSize6">6*6</label>
-				<input id="boardSize4" type="radio" name="boardsize" value="4" checked={boardSize===4} onClick={()=>setBoardSize(4)} />
+					<input id="boardSize4" type="radio" name="boardsize" value="4" checked={boardSize===4} onClick={()=>setBoardSize(4)} />
 					<label htmlFor="boardSize4">4*4</label>
 				</div>
 			<div className='board'>

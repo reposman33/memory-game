@@ -38,5 +38,13 @@
 
 	.card.is-flipped {
 		transform: rotateY(180deg);
+
+		& .card__face--front img {
+			display: none;
+		}
+	}
+
+	:not(.card.is-flipped).card__face--back img {
+		display: none;
 	}
 }

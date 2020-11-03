@@ -29,6 +29,7 @@ class I18n {
 		},
 		SCOREBOARD_CURRENTSCORE_LABEL: { en: "Your current score:", nl: "Je score is:" },
 		SCOREBOARD_CURRENTMOVE_LABEL: { en: "Used moves:", nl: "Aantal pogingen:" },
+		BOARDSIZE_LABEL: {en:"Choose a board size", nl:"Kies beginner, gevorderd of expert"}
 	};
 	static get(key: string) {
 		return I18n["tokens"][key] ? this.tokens[key][I18n.language] : "";

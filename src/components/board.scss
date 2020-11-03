@@ -19,20 +19,6 @@
 		margin-top: 2rem;
 	}
 
-	& .subHeader {
-		font-size: 2rem;
-		margin-top: 1rem;
-
-		& + div > label {
-			cursor: pointer;
-			font-size: 1.2rem;
-		}
-		& + div > input {
-			cursor: pointer;
-			margin-left: 1rem;
-		}
-	}
-
 	& .board {
 		background-color: #fff;
 		box-shadow: 0 0 30px 5px #ccc;

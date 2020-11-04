@@ -64,7 +64,8 @@ const Board = () => {
 	 * @param {string} imgPath - path to img folder
 	 * @returns {array} - an array of TCard objects
 	 */
-		return fileNames.map((fileName: string, i: number) => ({
+	const getMemoryCards = (fileNames: string[], imgPath: string): TCard[] => 
+		fileNames.map((fileName: string, i: number) => ({
 			col: i % boardSize,
 			id: i,
 			hiddenImgPath: `${assetsPath}/hiddenImg.jpg`,

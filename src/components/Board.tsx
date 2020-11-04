@@ -142,7 +142,7 @@ const Board = () => {
 	 * @function onStart
 	 * @description executed when start button clicked. Hides and shuffles cards
 	 */
-	const onStart = () => {
+	const onShuffle = () => {
 		gameActive = true;
 		setGameOverText("");
 		// hide cards
@@ -192,7 +192,7 @@ const Board = () => {
 			<div className='board'>
 				{fileNamesArray && makeRows(getMemoryCards(fileNamesArray, `${assetsPath}`), boardSize, onClickCard)}
 			</div>
-			<Button status={buttonStatus} onStart={onStart} />
+			<Button status={buttonStatus} onClick={onShuffle} />
 		</div>
 	);
 };

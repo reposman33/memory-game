@@ -4,8 +4,7 @@
 	height: 3rem;
 }
 .gameOver {
-	animation: rotate 0.8s ease-out 1s infinite alternate, drop 1s ease-in;
-
+	animation: rotate 0.8s ease-in-out 1s infinite alternate, drop 1s;
 	background-color: darkslategray;
 	border-radius: 1rem;
 	color: white;

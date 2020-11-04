@@ -1,4 +1,4 @@
-import React, { useState, useEffect, MouseEvent } from "react";
+import React, { useState, useEffect } from "react";
 import { Row } from "./Row";
 import { TCard } from "../types/Card";
 import { I18n } from "../services/I18n";
@@ -28,7 +28,7 @@ let turnedCards: TClickedcard[] = [];
 let gameActive: boolean = false;
 
 const Board = () => {
-	const [fileNamesArray, setFileNamesArray] = useState<string[]>([]);
+	const [fileNames, setFileNames] = useState<string[]>([]);
 	// Scoreboard dependencies
 	const [boardSize, setBoardSize] = useState(nrOfColumns);
 	const [score, setScore] = useState(0);
@@ -45,13 +45,13 @@ const Board = () => {
  * 				1c duplicate that so we have all the card images needed for the board;
  */
 	useEffect(() => {
-		setFileNamesArray([]); // start with an empty board
+		setFileNames([]); // start with an empty board
 		fetch(`${assetsPath}/cards/files.json`) //1
 			.then((res) => res.json())
 			.then((res) => {
 				const nrOfUniqueCards = Math.pow(boardSize, 2) / 2; // 2
 				const cardfileNames = Object.keys(res).slice(0, nrOfUniqueCards); // 2
-				setFileNamesArray(cardfileNames.concat(cardfileNames)); // 3
+				setFileNames(cardfileNames.concat(cardfileNames)); // 3
 			})
 			.catch((e) => console.log("ERROR: ", e));
 	}, [boardSize]);
@@ -64,8 +64,7 @@ const Board = () => {
 	 * @param {string} imgPath - path to img folder
 	 * @returns {array} - an array of TCard objects
 	 */
-	const getMemoryCards = (imgNames: string[], imgPath: string): TCard[] => {
-		return imgNames.map((fileName: string, i: number) => ({
+		return fileNames.map((fileName: string, i: number) => ({
 			col: i % boardSize,
 			id: i,
 			hiddenImgPath: `${assetsPath}/hiddenImg.jpg`,
@@ -148,15 +147,10 @@ const Board = () => {
 		// hide cards
 		cardReferences.forEach((ref) => ref.flipCard(true));
 		// shuffle cards
-		const _randomizedFileNamesArray: string[] = [];
-		const _fileNamesArray = [...fileNamesArray];
-		while (_fileNamesArray.length > 0) {
-			let randomIndex = Math.floor(Math.random() * _fileNamesArray.length);
-			_randomizedFileNamesArray.push(_fileNamesArray[randomIndex]);
-			_fileNamesArray.splice(randomIndex, 1);
+			let randomIndex = Math.floor(Math.random() * _fileNames.length);
 		}
 		// change cards image
-		cardReferences.forEach((ref, i) => ref.setImagePath(`${assetsPath}/cards/${_randomizedFileNamesArray[i]}`));
+		cardReferences.forEach((ref, i) => ref.setImagePath(`${assetsPath}/cards/${_randomizedFileNames[i]}`));
 		setScoreBoardVisibility(true);
 		setButtonStatus("INACTIVE");
 	};

@@ -21,7 +21,6 @@ type TButtonStatus = "ACTIVE" | "INACTIVE" | "DEMO";
 // Size of board. nrOfColumns === nrOfRows, we have 4*4 and 6*6 matrix since total Nr OfCards has to be even to have pairs of equal cards
 const nrOfColumns = 6; // === (4*4) / 2 unique cards; (6*6) / 2 = 18 unique cards; (8*8) / 2 = 32 unique cards
 const assetsPath = "/assets/img";
-const cardReferences: cardReference[] = [];
 let turnedCards: TClickedcard[] = [];
 
 // the board is unresponsive until 'Start' button is clicked
@@ -38,6 +37,12 @@ const Board = () => {
 	// Button dependencies
 	const [buttonStatus, setButtonStatus] = useState<TButtonStatus>("ACTIVE");
 	const [language, setLanguage] = useState(I18n.language);
+	const cardReferences: cardReference[] = [];
+
+	const changeBoardSize = (boardSize: number) => {
+		setBoardSize(boardSize);
+		setButtonStatus('ACTIVE');
+}
 
 /**
  * @description 1a retrieve the names of all the _unique_ cardImages;
@@ -74,7 +79,6 @@ const Board = () => {
 			row: Math.floor(i / boardSize),
 			visible: true,
 		}));
-	};
 
 	/**
 	 * @function makeRows
@@ -105,6 +109,24 @@ const Board = () => {
 		cardReferences.push(refs);
 	};
 
+	const isCardTurned = (clickedCard: TClickedcard) => turnedCards.some((card) => card.id === clickedCard.id);
+	const checkTurnedCards = (turnedCards: TClickedcard[]) => { 
+		if (turnedCards[0].imgPath === turnedCards[1].imgPath) {
+			setScore(score + 1);
+		} else {
+			turnBackCards(turnedCards);
+		}
+		turnedCards = [];
+	}
+	const turnBackCards = (turnedCards: TClickedcard[]) => turnedCards.forEach((card) => card.flip(true));
+	const checkGameOver = () => {
+		if (score === fileNames.length / 2 || score === (fileNames.length / 2) - 1 ) {
+			setScore(score + 1);
+			setGameOverText(I18n.get("SCOREBOARD_WIN"));
+			setButtonStatus("ACTIVE");
+		}
+	}
+
 	/**
 	 * @function onClickCard
 	 * @description Callback invoked by Card component. It invokes functionality such as flipping back cards when the 3d card is clicked, checking card equality etc
@@ -113,29 +135,17 @@ const Board = () => {
 	 */
 	const onClickCard = (clickedCard: TClickedcard) => {
 		// ignore multiple clicks on same card || clicks when the game has not been started yet
-		if (turnedCards.some((card) => card.id === clickedCard.id) || !gameActive) {
+		if ( isCardTurned(clickedCard) || !gameActive) {
 			return;
 		}
 		if (turnedCards.length === 2) {
-			if (turnedCards[0].imgPath !== turnedCards[1].imgPath) {
-				turnedCards.forEach((card) => card.flip(true));
-			}
+			checkTurnedCards(turnedCards);
 			turnedCards = [];
-			turnedCards.push(clickedCard);
 		} else if (turnedCards.length === 1) {
-			turnedCards.push(clickedCard);
-			// compare card equality
-			turnedCards[0].imgPath === turnedCards[1].imgPath && setScore(score + 1);
-			// keep tract of nrOfMoves
 			setMoveCount(moveCount + 1);
-		} else {
-			turnedCards.push(clickedCard);
+			checkGameOver();
 		}
-		if (score >= fileNamesArray.length / 2) {
-			setGameOverText(I18n.get("SCOREBOARD_WIN"));
-			setButtonStatus("ACTIVE");
-			turnedCards = [];
-		}
+		turnedCards.push(clickedCard);
 	};
 
 	/**
@@ -148,10 +158,18 @@ const Board = () => {
 		// hide cards
 		cardReferences.forEach((ref) => ref.flipCard(true));
 		// shuffle cards
+		const _randomizedFileNames: string[] = [];
+		const _fileNames = [...fileNames];
+		while (_fileNames.length > 0) {
 			let randomIndex = Math.floor(Math.random() * _fileNames.length);
+			_randomizedFileNames.push(_fileNames[randomIndex]);
+			_fileNames.splice(randomIndex, 1);
 		}
 		// change cards image
-		cardReferences.forEach((ref, i) => ref.setImagePath(`${assetsPath}/cards/${_randomizedFileNames[i]}`));
+		cardReferences.forEach((ref, i) => {
+			const imgFileName: String = `${assetsPath}/cards/${_randomizedFileNames[i]}`;
+			ref.setImagePath(imgFileName);
+		});
 		setScoreBoardVisibility(true);
 		setButtonStatus("INACTIVE");
 	};
@@ -180,17 +198,17 @@ const Board = () => {
 				scoreBoardVisibility={scoreBoardVisibility}
 				gameOverText={gameOverText}
 			/>
-			<div className="subHeader">Choose a board size</div>
+			<div className="subHeader">{I18n.get("BOARDSIZE_LABEL")}</div>
 				<div>
-				<input id="boardSize8" type="radio" name="boardsize" value="8" checked={boardSize===8} onClick={()=>setBoardSize(8)} />
+					<input id="boardSize8" type="radio" name="boardsize" value="8" checked={boardSize===8} onChange={()=>changeBoardSize(8)} />
 					<label htmlFor="boardSize8">8*8</label>
-					<input id="boardSize6" type="radio" name="boardsize" value="6" checked={boardSize===6} onClick={()=>setBoardSize(6)} />
+					<input id="boardSize6" type="radio" name="boardsize" value="6" checked={boardSize===6} onChange={()=>changeBoardSize(6)} />
 					<label htmlFor="boardSize6">6*6</label>
-				<input id="boardSize4" type="radio" name="boardsize" value="4" checked={boardSize===4} onClick={()=>setBoardSize(4)} />
+					<input id="boardSize4" type="radio" name="boardsize" value="4" checked={boardSize===4} onChange={()=>changeBoardSize(4)} />
 					<label htmlFor="boardSize4">4*4</label>
 				</div>
 			<div className='board'>
-				{fileNamesArray && makeRows(getMemoryCards(fileNamesArray, `${assetsPath}`), boardSize, onClickCard)}
+				{fileNames && makeRows(getMemoryCards(fileNames, `${assetsPath}`), boardSize, onClickCard)}
 			</div>
 			<Button status={buttonStatus} onClick={onShuffle} />
 		</div>
